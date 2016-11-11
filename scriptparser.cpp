@@ -96,6 +96,10 @@ string getPhrase(string path, string pattern){
 }
 
 int main(int argc, char *argv[]){
+    if(argc < 2){
+        cout << "Please provide the path to the script" << '\n';
+        return 0;
+    }
     regex rx("[a-z][0-9][0-9]*\\)*");
     string out = getPhrase(argv[1],"(define-fun");
     vector<string> tokens = formVector(out);
