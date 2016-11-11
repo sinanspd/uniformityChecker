@@ -77,7 +77,7 @@ string getPhrase(string path, string pattern){
 
 int main(int argc, char *argv[]){
     //Make it take in a file name
-    regex rx("i[0-9]\\)*");
+    regex rx("[a-z][0-9][0-9]*\\)*");
     string out = getPhrase(argv[1],"(define-fun");
     vector<string> tokens = formVector(out);
     string formula1 = getTokens(tokens, rx);

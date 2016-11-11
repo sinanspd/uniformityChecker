@@ -1,14 +1,13 @@
 #!/bin/bash
 
 make 
-./main "AND2_TI.sl" | tee lexical/input.txt input.txt
+./main "inputsometing" | tee lexical/input.txt input.txt
 cd lexical
 make 
 ./main > /dev/null &>/dev/null 
 if [ $? -eq 139 ]; then
 	cd ..
 	./tree
-	./checkUniform
 	rm input.txt
 	echo "sigh"
 fi
