@@ -1,0 +1,1 @@
+(and (xor (xor i00 i01) i02) (xor (xor i10 i11) i12) 

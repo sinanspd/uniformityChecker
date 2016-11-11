@@ -1,0 +1,1 @@
+(not (or (xor (not r0) (xor r0 i1)) (xor (not r0) (xor r0 i0)))))

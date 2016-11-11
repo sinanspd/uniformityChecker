@@ -1,0 +1,2 @@
+(define-fun Tree ((i0 Bool) (i1 Bool) (i2 Bool) (i3 Bool)) Bool
+    (xor (or (not i1) (xor i3 i2)) (xor (not i0) (and i3 i0))))
