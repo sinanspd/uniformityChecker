@@ -1,10 +1,10 @@
 #!/bin/bash
 
 make 
-./main "inputsometing" | tee lexical/input.txt input.txt
+./main "inputsomething" | tee lexical/input.txt input.txt
 cd lexical
 make 
-./main > /dev/null &>/dev/null 
+./main > /dev/null &> /dev/null 
 if [ $? -eq 139 ]; then
 	cd ..
 	./tree

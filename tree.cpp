@@ -8,17 +8,21 @@
 #include "tree.h"
 
 using namespace std;
+// Null Constructor
 treeNode::treeNode(){
-  //root= NULL;
   value = "";
 }
 
+/*
+* Main Constructor. Form a tree using the given formula
+* @param the boolean formula 
+*/
 treeNode::treeNode(string formula){
    createNode(formula);
 }
 
+
 void treeNode::createNode(string formula){
-  //node top;
   string formula2 = formula.substr(1, formula.size() - 1);
   vector<string> a;
   int open = 0;
@@ -80,8 +84,6 @@ void treeNode::createNode(string formula){
       //cout << "Right VALUE IS:" << top.right->value << '\n';
     }
   }
- // return &top;
-
 }
 
 
@@ -189,16 +191,26 @@ bool treeNode::checkUniformity(string formula, int inputs){
  return true;
 }
 
+/*
+* Check if the formula if uniform for given possible values
+* @param Enumuration of all possible values of the inputs of formula
+* @return if the formula is uniform
+*/
 bool treeNode::uniformp(vector<string> combination){
-for(std::vector<string>::iterator it = combination.begin(); it != combination.end(); ++it) {
-//  cout << "checking" << '\n';
-  cout << "Input" << *it << '\n';
-  bool x = this->checkForOne(*it);
-  cout << "Result: " << x << '\n';
+  for(std::vector<string>::iterator it = combination.begin(); it != combination.end(); ++it) {
+    cout << "Input" << *it << '\n';
+    bool x = this->checkForOne(*it);
+    cout << "Result: " << x << '\n';
   }
-return true;
+  //change this later
+  return true;
 }
 
+/*
+* Calculate the output for the given input value set
+* @param input value set
+* @return the output value for given inputs
+*/
 bool treeNode::checkForOne(string combination){
     bool result;
 //  cout << "checkforone" << '\n';
