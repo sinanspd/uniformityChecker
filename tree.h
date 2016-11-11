@@ -20,8 +20,6 @@ class treeNode{
         treeNode(std::string formula);
         ~treeNode();
 
-
-        void destroy_tree();
         int main();
     treeNode *left = NULL;
     treeNode *right = NULL;
@@ -40,7 +38,6 @@ class treeNode{
 
 
     private:
-        void destroy_tree(node *leaf);
         void createNode(std::string n);
         
 };

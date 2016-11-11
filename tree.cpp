@@ -87,15 +87,11 @@ void treeNode::createNode(string formula){
 }
 
 
-void treeNode::destroy_tree(node *leaf){
-/*  if(leaf!= NULL){
-      destroy_tree(leaf->left);
-      destroy_tree(leaf->right);
-      delete leaf;
-  }*/
-}
-
-
+/*
+* Traverse the Tree and print its nodes 
+* Uses a depth first traversal  
+* meaning all the nodes to the left will be printed before nodes to the right
+*/
 void treeNode::printTree(){
     if(this->op_and){
       cout << "and" << '\n';
@@ -118,17 +114,14 @@ void treeNode::printTree(){
       cout << "PRINT RIGHT" << '\n';
       right->printTree();
     }
-
-
 }
 
-
-
-void treeNode::destroy_tree()
-{
-//  destroy_tree(root);
-}
-
+/*
+* Get the number of all distint inputs in the given formula
+* @param the boolean formula
+* @return int representing number of distinct inputs 
+* return result of 4 implies i0, i1, i2, i3 are present in the formula
+*/
 int getInputs(string formula){
     regex rx("[a-z][0-9]\\)*");
     istringstream iss(formula);
@@ -150,26 +143,37 @@ int getInputs(string formula){
     return inputs.size();   
 }
 
-
+/*
+* Create the next permutation given a base test string
+* @param iterator pointing to the start
+* @param iterator pointing to the end
+* @return the value of the next param
+*/
 bool next(string::iterator begin, string::iterator end)
 {
-    if (begin == end)      // changed all digits
-    {                      // so we are back to zero
-        return false;      // that was the last number
+    if (begin == end)      
+    {                      
+        return false;      
     }
     --end;
-    if ((*end & 1) == 0)   // even number is treated as zero
+    if ((*end & 1) == 0)   
     {
-        ++*end;            // increase to one
-        return true;       // still more numbers to come
+        ++*end;            
+        return true;       
     }
-    else                   // odd number is treated as one
+    else                  
     {
-        --*end;            // decrease to zero
-        return next(begin, end);   // RECURSE!
+        --*end;            
+        return next(begin, end);   
     }
 }
 
+/*
+* Check if the given formula is uniform in terms of output
+* @param the formula
+* @param number of distinct inputs in the formula
+* @return if uniform
+*/
 bool treeNode::checkUniformity(string formula, int inputs){
   string initial ="";
   int i;
@@ -184,11 +188,9 @@ bool treeNode::checkUniformity(string formula, int inputs){
     combinations.push_back(test);
     cout << test << '\n';
   } while (next(test.begin(), test.end()));
-    // now the vector contains all pssible combinations
-  //permutate all possible values of values iterate through and calculate values
     
- this-> uniformp(combinations);
- return true;
+  this-> uniformp(combinations);
+  return true;
 }
 
 /*
@@ -213,47 +215,35 @@ bool treeNode::uniformp(vector<string> combination){
 */
 bool treeNode::checkForOne(string combination){
     bool result;
-//  cout << "checkforone" << '\n';
-        if(this->op_and){
-//    cout << "ANDCHECK"<<'\n';
-                result = left->checkForOne(combination) && right->checkForOne(combination);
-        }else if(this->op_or){
-//    cout << "ORCHECK"<<'\n';
-                result = left->checkForOne(combination) || right->checkForOne(combination);
-        }else if(this->op_not){
-//    cout << "NOTCHECK"<<'\n';
-                if(left != NULL){
-                        result = !left->checkForOne(combination);
+    if(this->op_and){
+      result = left->checkForOne(combination) && right->checkForOne(combination);
+    }else if(this->op_or){
+      result = left->checkForOne(combination) || right->checkForOne(combination);
+    }else if(this->op_not){
+      if(left != NULL){
+        result = !left->checkForOne(combination);
+      }
+      if(right != NULL){
+        result = !right->checkForOne(combination);
+      }
+    }else if(this->op_xor){
+      result= (!right->checkForOne(combination) != !left->checkForOne(combination));
+    }else if(this->value != ""){
+      string inp = (this->value).substr(1, (this->value).size());
+      int index = stoi(inp);
+      char val = combination.at(index);
+      if(val == '0'){
+        result = false;
+      }else{
+        result = true;
+      }
     }
-    if(right != NULL){
-      result = !right->checkForOne(combination);
-    }
-        }else if(this->op_xor){
-//    cout << "XORCHECK"<<'\n';
-                result= (!right->checkForOne(combination) != !left->checkForOne(combination));
-        }else if(this->value != ""){
-//    cout << "printing" << '\n';;
-                string inp = (this->value).substr(1, (this->value).size());
-//    cout << "here1: " << inp << '\n';
-    int index = stoi(inp);
-//    cout << "here2: " << index << '\n';
-    char val = combination.at(index);
-//    cout << "Combination value:" << val << '\n';
-    if(val == '0'){
-      result = false;
-    }else{
-      result = true;
-    }
-        }
-
   return result;
 }
 
+ 
 int main(){
   treeNode* a = new treeNode("(xor (or (not i1) (xor i3 i2)) (xor (not i0) (and i3 i0))))");
-  //treeNode* a = new treeNode("(xor (or (not i1) i3) (xor (not i0) (and i3 i0)))");
-  //printTree(a->root);
   int x = getInputs("(xor (or (not i1) (xor i3 i2)) (xor (not i0) (and i3 i0)))) ");
   a->checkUniformity("", x);  
-  a->printTree();
 }
