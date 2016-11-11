@@ -1,1 +1,1 @@
-((and d1 (xor d1 (not (or d1 ((and d2 (xor d2 (not (or d2 ((and d3 (xor d3 (not (or d3 
+(and (xor (xor i00 i01) i02) (xor (xor i10 i11) i12) 

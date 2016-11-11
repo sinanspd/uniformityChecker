@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <fstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <algorithm>
@@ -8,6 +9,7 @@
 #include "tree.h"
 
 using namespace std;
+
 // Null Constructor
 treeNode::treeNode(){
   value = "";
@@ -18,17 +20,22 @@ treeNode::treeNode(){
 * @param the boolean formula 
 */
 treeNode::treeNode(string formula){
+   this->formula = formula;
+   cout << "Creating Tree" <<'\n';
    createNode(formula);
 }
 
-
+/*
+* Create the current node according to the given formula
+* @param formula to create the node
+*/
 void treeNode::createNode(string formula){
   string formula2 = formula.substr(1, formula.size() - 1);
   vector<string> a;
   int open = 0;
   int closed = 0;
   string soFar = "";
-  regex rx("[a-z][0-9]\\)*");
+  regex rx("[a-z][0-9][0-9]*\\)*");
   for(char& c : formula2) {
       if (soFar == "and" | soFar == "xor" | soFar=="or" | soFar=="not"|regex_match(soFar, rx)){
         cout << "Value is " << soFar << '\n';
@@ -45,7 +52,6 @@ void treeNode::createNode(string formula){
       }else{
         soFar += c;
       }
-
       if((open != 0 && closed != 0) && open == closed){
         open = 0;
         closed = 0;
@@ -53,36 +59,47 @@ void treeNode::createNode(string formula){
         soFar = "";
       }
   }  
-  //cout << a.size() << '\n';
-  if(a.at(0) == "and"){
-    this->op_and = true;
-  }else if(a.at(0) == "or"){
-    this->op_or = true;
-  }else if(a.at(0) == "xor"){
-    this->op_xor = true;
-  }else if(a.at(0) == "not"){
-    this->op_not = true;
-  }
 
-  if(a.at(1).find('(') != std::string::npos){
-    //cout << "LEFT IS:" << a.at(1) << '\n';
+  this->setCurrentNodeValue(a.at(0));
+  this->setLeftAndRight(a);
+}
+
+/*
+* Form the left and right nodes according to given values
+* @param vector representing values for this left and rights
+*/
+void treeNode::setLeftAndRight(vector<string> a){
+   if(a.at(1).find('(') != std::string::npos){
     left = new treeNode();
-     left->createNode(a.at(1));
+    left->createNode(a.at(1));
   }else{
     left = new treeNode();
     left->value = a.at(1);
-    //cout << "Left VALUE IS:" << top.left->value << '\n';
   }
   if(a.at(0) != "not"){
     if(a.at(2).find('(') != std::string::npos){
-      //cout << "RIGHT IS:" << a.at(2) << '\n';
       right = new treeNode();
       right->createNode(a.at(2));
     }else{
       right = new treeNode();
       right->value = a.at(2);
-      //cout << "Right VALUE IS:" << top.right->value << '\n';
     }
+  }
+}
+
+/*
+* Set the value of the current Node
+* @param the value to be set
+*/
+void treeNode::setCurrentNodeValue(string value){
+  if(value == "and"){
+    this->op_and = true;
+  }else if(value == "or"){
+    this->op_or = true;
+  }else if(value == "xor"){
+    this->op_xor = true;
+  }else if(value == "not"){
+    this->op_not = true;
   }
 }
 
@@ -118,12 +135,12 @@ void treeNode::printTree(){
 
 /*
 * Get the number of all distint inputs in the given formula
-* @param the boolean formula
 * @return int representing number of distinct inputs 
 * return result of 4 implies i0, i1, i2, i3 are present in the formula
 */
-int getInputs(string formula){
-    regex rx("[a-z][0-9]\\)*");
+int treeNode::getInputs(){
+    string formula = this->formula;
+    regex rx("[a-z][0-9][0-9]*\\)*");
     istringstream iss(formula);
     vector<string> tokens;
     vector<string> inputs;
@@ -170,11 +187,9 @@ bool next(string::iterator begin, string::iterator end)
 
 /*
 * Check if the given formula is uniform in terms of output
-* @param the formula
-* @param number of distinct inputs in the formula
-* @return if uniform
 */
-bool treeNode::checkUniformity(string formula, int inputs){
+bool treeNode::checkUniformity(){
+  int inputs = this->getInputs();
   string initial ="";
   int i;
   for(i = 0; i < inputs; i++){
@@ -186,7 +201,6 @@ bool treeNode::checkUniformity(string formula, int inputs){
   do
   {
     combinations.push_back(test);
-    cout << test << '\n';
   } while (next(test.begin(), test.end()));
     
   this-> uniformp(combinations);
@@ -200,9 +214,9 @@ bool treeNode::checkUniformity(string formula, int inputs){
 */
 bool treeNode::uniformp(vector<string> combination){
   for(std::vector<string>::iterator it = combination.begin(); it != combination.end(); ++it) {
-    cout << "Input" << *it << '\n';
+    cout << "For Input: " << *it << '\n';
     bool x = this->checkForOne(*it);
-    cout << "Result: " << x << '\n';
+    cout << "Result is: " << x << '\n';
   }
   //change this later
   return true;
@@ -229,21 +243,47 @@ bool treeNode::checkForOne(string combination){
     }else if(this->op_xor){
       result= (!right->checkForOne(combination) != !left->checkForOne(combination));
     }else if(this->value != ""){
-      string inp = (this->value).substr(1, (this->value).size());
-      int index = stoi(inp);
-      char val = combination.at(index);
-      if(val == '0'){
-        result = false;
-      }else{
-        result = true;
-      }
+      result = this->getValue(combination);
     }
   return result;
 }
 
+
+/*
+* Get the value of the current input from the combination
+* @param Input value combination
+* @return true if 1, false if 0
+*/
+bool treeNode::getValue(string combination){
+  string inp = (this->value).substr(1, (this->value).size());
+  int index = stoi(inp);
+  char val = combination.at(index);
+  if(val == '0'){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+/*
+* Read the input from the given file
+* @param path to the file
+* @return extracted formula
+*/
+string getFormula(string path){
+  ifstream file(path);
+  string formula;
+  getline(file, formula);
+  return formula;
+}
  
-int main(){
-  treeNode* a = new treeNode("(xor (or (not i1) (xor i3 i2)) (xor (not i0) (and i3 i0))))");
-  int x = getInputs("(xor (or (not i1) (xor i3 i2)) (xor (not i0) (and i3 i0)))) ");
-  a->checkUniformity("", x);  
+int main(int argc, char *argv[]){
+  string formula;
+  if(argc < 2){
+    formula = getFormula("formula1.txt");
+  }else{
+    formula = getFormula(argv[1]);
+  }
+  treeNode* a = new treeNode(formula);
+  a->checkUniformity();  
 }
