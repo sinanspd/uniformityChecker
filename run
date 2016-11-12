@@ -1,7 +1,7 @@
 #!/bin/bash
 
 make 
-./main "inputsomething" | tee lexical/input.txt input.txt
+./main "exampleinput" | tee lexical/input.txt input.txt
 cd lexical
 make 
 ./main > /dev/null &> /dev/null 
