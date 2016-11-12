@@ -9,6 +9,7 @@ if [ $? -eq 139 ]; then
 	cd ..
 	./tree
 	rm input.txt
+	make clean
 	echo "sigh"
 fi
 
