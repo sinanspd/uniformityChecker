@@ -147,13 +147,23 @@ The project has two parts:
  </li>
    
 <h3> File Legend </h3>
+
 MakeFile: makefile to compile programs and clear binary files
+
 run: Bashscript to automately compile and run everything in order
+
 scriptparser.cpp: Scriptparser implementation
+
 tree.cpp: Functionality of the tree class, including the uniformityChecker
+
 tree.h: Header File for the tree class
+
 formula1.txt: Test formula, output file for scriptParser
+
 formula2.txt: Test formula
+
 AND2_TI.sl: Test SygusScript (Provided by Pei Luo)
+
 exampleinput: Test SygusScriptOutput 
+
 lexical: NFA based implementation for Tree class (Provided by Pei Luo)
