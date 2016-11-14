@@ -157,6 +157,7 @@ int treeNode::getInputs(){
     }
     sort(inputs.begin(), inputs.end() );
     inputs.erase( unique(inputs.begin(), inputs.end() ), inputs.end());
+    cout << inputs.size();
     return inputs.size();   
 }
 
@@ -190,14 +191,13 @@ bool next(string::iterator begin, string::iterator end)
 */
 bool treeNode::checkUniformity(){
   int inputs = this->getInputs();
-  string initial ="";
+  string test ="";
   int i;
   for(i = 0; i < inputs; i++){
-    initial += "0";
+    test += "0";
   }
 
   vector<string> combinations;
-  string test = "0000";
   do
   {
     combinations.push_back(test);
