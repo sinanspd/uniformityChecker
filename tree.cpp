@@ -203,8 +203,7 @@ bool treeNode::checkUniformity(){
     combinations.push_back(test);
   } while (next(test.begin(), test.end()));
     
-  this-> uniformp(combinations);
-  return true;
+  return this-> uniformp(combinations);
 }
 
 /*
@@ -213,13 +212,35 @@ bool treeNode::checkUniformity(){
 * @return if the formula is uniform
 */
 bool treeNode::uniformp(vector<string> combination){
+  vector<int> results;
   for(std::vector<string>::iterator it = combination.begin(); it != combination.end(); ++it) {
     cout << "For Input: " << *it << '\n';
     bool x = this->checkForOne(*it);
+    results.push_back(x);
     cout << "Result is: " << x << '\n';
   }
   //change this later
-  return true;
+  return this->checkOccurances(results);
+}
+
+bool treeNode::checkOccurances(vector<int> results){
+  int zeros = 0;
+  int ones = 0;
+  for(std::vector<int>::iterator it = results.begin(); it != results.end(); ++it) {
+    if(*it == 0){
+      zeros++;
+    }else{
+      ones++;
+    }
+  }
+
+  if(zeros == ones){
+    cout << "Formula is Uniform" << '\n';
+    return true;
+  }else{
+    cout << "Formula is not Uniform" << '\n';
+    return false;
+  }
 }
 
 /*

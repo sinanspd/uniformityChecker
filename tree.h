@@ -45,6 +45,7 @@ class treeNode{
         int getInputs();
         bool uniformp(std::vector<std::string> v);
         bool checkForOne(std::string s);
+        bool checkOccurances(std::vector<int> results);
         
 };
 

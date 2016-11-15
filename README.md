@@ -1,7 +1,9 @@
 # uniformityChecker
 
 <h3> Project Description </h3>
-Uniformity Checker for boolean formulas. Uniformity is defined as: <insert definition here> 
+Uniformity Checker for boolean formulas. Uniformity is defined as: 
+   A boolean formula is uniform if and only if the output values of 0 and 1 occur evenly that is the output
+   has 2^n/2 0s and 2^n/2 1s.
 
 The project has two parts:
 
